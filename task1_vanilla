@@ -1,0 +1,23 @@
+-- Load CSVs as persistent tables to avoid re-parsing for every query
+CREATE TABLE airlines AS
+SELECT * FROM read_csv_auto('airlines 2.csv', AUTO_DETECT=TRUE);
+
+CREATE TABLE airports AS
+SELECT * FROM read_csv_auto('airports 2.csv', AUTO_DETECT=TRUE);
+
+CREATE TABLE flights AS
+SELECT * FROM read_csv_auto('flights_trunc 2 2.csv', AUTO_DETECT=TRUE);
+
+-- Return all fields from 20 records
+SELECT * FROM flights LIMIT 20;
+
+-- Return destination airports and arrival times where takeoff time was before 11AM
+SELECT DESTINATION_AIRPORT, ARRIVAL_TIME
+FROM flights
+WHERE DEPARTURE_TIME < 1100;
+
+-- What is the longest flight time?
+SELECT MAX(AIR_TIME) AS longest_flight_time FROM flights;
+
+-- How many different airlines are in the dataset?
+SELECT COUNT(DISTINCT AIRLINE) AS number_of_airlines FROM flights;

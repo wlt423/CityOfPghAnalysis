@@ -1,0 +1,15 @@
+-- The specific number of and average amount of time for flights that go to a given airport
+-- the correlation between the arrival delay and air time
+-- the correlation between distance and the actual arrival time
+-- order and list the top five results
+
+SELECT
+    DESTINATION_AIRPORT AS destination,
+    COUNT(*) AS flight_count,
+    AVG(AIR_TIME) AS avg_air_time,
+    corr(ARRIVAL_DELAY, AIR_TIME) AS corr_arr_delay_air_time,
+    corr(DISTANCE, ARRIVAL_TIME) AS corr_distance_arr_time
+FROM flights
+GROUP BY DESTINATION_AIRPORT
+ORDER BY flight_count DESC
+LIMIT 5;

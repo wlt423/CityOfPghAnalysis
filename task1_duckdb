@@ -1,0 +1,44 @@
+-- 1. Enable HTTP support and install necessary extensions
+INSTALL httpfs;
+LOAD httpfs;
+
+-- 2. Download and convert CSVs to Parquet for fast read access
+CREATE TABLE airlines AS
+SELECT * FROM read_csv_auto('https://storage.googleapis.com/data_services_for_job_candidates/airlines%202.csv');
+COPY airlines TO 'airlines.parquet' (FORMAT 'parquet');
+
+CREATE TABLE airports AS
+SELECT * FROM read_csv_auto('https://storage.googleapis.com/data_services_for_job_candidates/airports%202.csv');
+COPY airports TO 'airports.parquet' (FORMAT 'parquet');
+
+CREATE TABLE flights AS
+SELECT * FROM read_csv_auto('https://storage.googleapis.com/data_services_for_job_candidates/flights_trunc%202%202.csv');
+COPY flights TO 'flights.parquet' (FORMAT 'parquet');
+
+-- 3. Drop original tables to save memory
+DROP TABLE airlines;
+DROP TABLE airports;
+DROP TABLE flights;
+
+-- 4. Recreate from Parquet (blazing fast reads now)
+CREATE TABLE airlines AS SELECT * FROM 'airlines.parquet';
+CREATE TABLE airports AS SELECT * FROM 'airports.parquet';
+CREATE TABLE flights AS SELECT * FROM 'flights.parquet';
+
+-- 5. Task 1 Queries
+
+-- 5.1 Return all fields from 20 records
+SELECT * FROM flights LIMIT 20;
+
+-- 5.2 Destination airports and arrival times for departures before 11AM
+SELECT DESTINATION_AIRPORT, ARRIVAL_TIME
+FROM flights
+WHERE DEPARTURE_TIME < 1100;
+
+-- 5.3 Longest flight time
+SELECT MAX(AIR_TIME) AS longest_flight_time
+FROM flights;
+
+-- 5.4 Number of distinct airlines
+SELECT COUNT(DISTINCT AIRLINE) AS total_airlines
+FROM flights;

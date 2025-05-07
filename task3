@@ -1,0 +1,19 @@
+DESCRIBE flights;
+-- 2. Would your model be efficient enough for use when the dataset was being written? Why or why not?
+-- Probably Not. The model prioritizes read performance which sacrifices write efficiency. Frequent writes -- would require more maintenance overhead and slow ingestion.
+
+-- 3. Would you recommend NoSQL here? Why or why not?
+-- No. This dataset is relational, structured, and benefits from SQL operations. NoSQL would reduce query -- efficiency and increase complexity without added benefit.
+
+-- Inspect the data types. Do you think each is appropriate for the content of the data? If not, how would -- change those? Why?
+
+-- The only absolutely necessary change would be to change flight_number to varchar or text because flight -- numbers are alphanumeric and not really an actual number. For the sake of efficiency, further changes -- can be made. Year, month, day,and day of the week are overprovisioned and can be changed to int
+| Column         | Current Type | Recommended Type | Reason                                   |
+| -------------- | ------------ | ---------------- | ---------------------------------------- |
+| YEAR           | BIGINT       | INT              | overprovisioned                          |
+| MONTH          | BIGINT       | TINYINT/SMALLINT | overprovisioned                          |
+| DAY            | BIGINT       | TINYINT/SMALLINT | overprovisioned                          |
+| DAY\_OF\_WEEK  | BIGINT       | TINYINT          | overprovisioned                          |
+| FLIGHT\_NUMBER | BIGINT       | VARCHAR          | alphanumeric                             |
+| AIRLINE        | VARCHAR      | VARCHAR          | OK                                       |
+| TAIL\_NUMBER   | VARCHAR      | VARCHAR          | OK                                       |
